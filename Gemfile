@@ -44,6 +44,7 @@ gem "kredis"
 gem "platform_agent"
 gem "thruster"
 gem "msgpack", ">= 1.7.0"
+gem "commonmarker"
 
 group :development, :test do
   gem "dotenv-rails"

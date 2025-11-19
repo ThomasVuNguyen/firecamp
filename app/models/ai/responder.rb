@@ -12,7 +12,7 @@ module Ai
 
       reply = message.room.messages.create!(
         creator: Ai::Assistant.user,
-        body: response
+        body: Ai::MarkdownRenderer.render(response)
       )
 
       reply.broadcast_create

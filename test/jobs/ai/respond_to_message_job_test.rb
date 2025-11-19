@@ -11,7 +11,7 @@ class Ai::RespondToMessageJobTest < ActiveJob::TestCase
       client_message_id: "ai-job"
     )
 
-    Ai::Client.stubs(:new).returns(stub(complete: "Sure, let's do it."))
+    Ai::Client.stubs(:new).returns(stub(complete: "# Title\n\n**Sure, let's do it.**"))
 
     Message.any_instance.expects(:broadcast_create).at_least_once
 
@@ -21,6 +21,8 @@ class Ai::RespondToMessageJobTest < ActiveJob::TestCase
 
     response = rooms(:pets).messages.order(:created_at).last
     assert_equal Ai::Assistant.user, response.creator
-    assert_equal "Sure, let's do it.", response.plain_text_body
+    html = response.body.body.to_s
+    assert_includes html, "<h1>Title</h1>"
+    assert_includes html, "<strong>Sure, let's do it.</strong>"
   end
 end
