@@ -18,6 +18,8 @@ class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
   fixtures :all
 
+  Ai::Assistant.ensure_presence!
+
   include SessionTestHelper, MentionTestHelper, TurboTestHelper
 
   setup do

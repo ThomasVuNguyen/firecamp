@@ -43,8 +43,10 @@ gem "net-http-persistent"
 gem "kredis"
 gem "platform_agent"
 gem "thruster"
+gem "msgpack", ">= 1.7.0"
 
 group :development, :test do
+  gem "dotenv-rails"
   gem "debug"
   gem "rubocop-rails-omakase", require: false
   gem "faker", require: false

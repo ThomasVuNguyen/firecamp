@@ -10,6 +10,7 @@ class Message < ApplicationRecord
 
   before_create -> { self.client_message_id ||= Random.uuid } # Bots don't care
   after_create_commit -> { room.receive(self) }
+  after_create_commit :ask_ai_assistant_to_reply
 
   scope :ordered, -> { order(:created_at) }
   scope :with_creator, -> { includes(:creator) }
@@ -35,4 +36,11 @@ class Message < ApplicationRecord
       Sound.find_by_name match[:name]
     end
   end
+
+  private
+    def ask_ai_assistant_to_reply
+      return unless Ai::Assistant.mentioned_in?(self)
+
+      Ai::Assistant.handle_mention(self)
+    end
 end

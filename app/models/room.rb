@@ -22,6 +22,8 @@ class Room < ApplicationRecord
 
   belongs_to :creator, class_name: "User", default: -> { Current.user }
 
+  after_create_commit -> { Ai::Assistant.ensure_membership!(self) }
+
   scope :opens,           -> { where(type: "Rooms::Open") }
   scope :closeds,         -> { where(type: "Rooms::Closed") }
   scope :directs,         -> { where(type: "Rooms::Direct") }

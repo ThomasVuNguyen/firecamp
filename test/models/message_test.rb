@@ -27,6 +27,34 @@ class MessageTest < ActiveSupport::TestCase
     assert_equal [], message_mentioning_a_non_member.mentionees
   end
 
+  test "mentioning the AI assistant enqueues a response when configured" do
+    Ai::Configuration.stubs(:enabled?).returns(true)
+
+    assert_enqueued_with(job: Ai::RespondToMessageJob) do
+      rooms(:pets).messages.create!(
+        creator: users(:jason),
+        body: "<div>Ping #{mention_attachment_for(Ai::Assistant.user)}</div>",
+        client_message_id: "ai-mention"
+      )
+    end
+  end
+
+  test "mentioning the AI assistant without credentials posts a reminder" do
+    Ai::Configuration.stubs(:enabled?).returns(false)
+
+    assert_difference -> { rooms(:pets).messages.count }, 2 do
+      rooms(:pets).messages.create!(
+        creator: users(:jason),
+        body: "<div>Ping #{mention_attachment_for(Ai::Assistant.user)}</div>",
+        client_message_id: "ai-reminder"
+      )
+    end
+
+    reminder = rooms(:pets).messages.order(:created_at).last
+    assert_equal Ai::Assistant.user, reminder.creator
+    assert_match "configure the AI assistant API key", reminder.plain_text_body
+  end
+
   private
     def create_new_message_in(room)
       room.messages.create!(creator: users(:jason), body: "Hello", client_message_id: "123")

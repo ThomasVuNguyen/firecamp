@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS "users" ("id" integer PRIMARY KEY AUTOINCREMENT NOT N
 CREATE UNIQUE INDEX "index_users_on_email_address" ON "users" ("email_address");
 CREATE UNIQUE INDEX "index_users_on_bot_token" ON "users" ("bot_token");
 INSERT INTO "schema_migrations" (version) VALUES
+('20250219205609'),
 ('20240209110503'),
 ('20240131105830'),
 ('20240130213001'),

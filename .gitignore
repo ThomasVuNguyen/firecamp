@@ -13,7 +13,7 @@ tmp/*
 
 .DS_Store
 .byebug_history
-.env*
+
 .puma-dev/
 *.swp
 *.log
@@ -22,3 +22,5 @@ tmp/*
 /db/*.sqlite3-journal
 
 once_download.zip
+
+.env
